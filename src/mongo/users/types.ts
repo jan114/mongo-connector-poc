@@ -5,13 +5,5 @@ export interface User {
   name: string;
   age: number;
 }
-export type MongoUser = Document<unknown, {}, User> & User & { _id: Types.ObjectId } & { __v: number }
-
-export interface ConnectOptions {
-  uri: string;
-  connectionAttempts?: number;
-}
-export interface UserRepository {
-  client: Mongoose;
-  model: Model<User>;
-}
+export type UserModel = Model<User>;
+export type MongoUser = Document<unknown, {}, User> & User & { _id: Types.ObjectId } & { __v: number };

@@ -1,9 +1,10 @@
-import users, {User} from "./mongo/users/index.js";
+import mongo from "./mongo/index.js";
 import process from "node:process";
 import crypto from "node:crypto";
+import {User} from "./mongo/users/index.js";
 
 async function main(): Promise<void> {
-  users.connection.init({ uri: "mongodb://localhost:27017/users" });
+  mongo.connection.init({ uri: "mongodb://localhost:27017/users" });
 
   const usersArray: User[] = [
     { id: crypto.randomUUID(), name: "John Doe", age: 30 },
@@ -14,16 +15,16 @@ async function main(): Promise<void> {
 
   await Promise.all(
     usersArray.map(async (user) => {
-      await users.methods.create(user);
-      await users.connection.close();
+      await mongo.users.create(user);
+      // await mongo.connection.close();
     })
   );
 
-  const allUsers = await users.methods.get();
+  const allUsers = await mongo.users.get();
   console.log("All users:", allUsers);
 
-  await users.methods.clear();
-  await users.connection.close();
+  await mongo.users.clear();
+  await mongo.connection.close();
 
   process.exit();
 }
