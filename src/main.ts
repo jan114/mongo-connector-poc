@@ -2,6 +2,7 @@ import mongo from "./mongo/index.js";
 import process from "node:process";
 import crypto from "node:crypto";
 import {User} from "./mongo/users/index.js";
+import exitHandler, {ExitSignal} from "./exit-handler.js";
 
 async function main(): Promise<void> {
   mongo.connection.init({ uri: "mongodb://localhost:27017/users" });
@@ -16,7 +17,7 @@ async function main(): Promise<void> {
   await Promise.all(
     usersArray.map(async (user) => {
       await mongo.users.create(user);
-      // await mongo.connection.close();
+      await mongo.connection.close();
     })
   );
 
@@ -24,10 +25,17 @@ async function main(): Promise<void> {
   console.log("All users:", allUsers);
 
   await mongo.users.clear();
-  await mongo.connection.close();
 
+  throw new Error("Test error");
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  await mongo.connection.close();
   process.exit();
 }
+
+exitHandler(["uncaughtException", "SIGINT", "SIGTERM"], async () => {
+  await mongo.connection.close();
+});
 
 void main();
 
