@@ -2,10 +2,15 @@ import mongo from "./mongo/index.js";
 import process from "node:process";
 import crypto from "node:crypto";
 import {User} from "./mongo/users/index.js";
-import exitHandler, {ExitSignal} from "./exit-handler.js";
+import exitHandler from "./exit-handler.js";
 
 async function main(): Promise<void> {
-  mongo.connection.init({ uri: "mongodb://localhost:27017/users" });
+  mongo.connection.init({
+    uri: "mongodb://localhost:27017/user-entity",
+    timeoutMS: 5000,
+    connectTimeoutMS: 2000,
+    serverSelectionTimeoutMS: 2000,
+  });
 
   const usersArray: User[] = [
     { id: crypto.randomUUID(), name: "John Doe", age: 30 },
@@ -16,8 +21,11 @@ async function main(): Promise<void> {
 
   await Promise.all(
     usersArray.map(async (user) => {
-      await mongo.users.create(user);
+      const result = await mongo.users.create(user);
+      console.log("Created user:", result);
       await mongo.connection.close();
+      const result2 = await mongo.users.getById(user.id);
+      console.log("Found user:", result2);
     })
   );
 
@@ -26,16 +34,15 @@ async function main(): Promise<void> {
 
   await mongo.users.clear();
 
-  throw new Error("Test error");
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  await exit();
+}
 
+async function exit(): Promise<void> {
   await mongo.connection.close();
   process.exit();
 }
 
-exitHandler(["uncaughtException", "SIGINT", "SIGTERM"], async () => {
-  await mongo.connection.close();
-});
+exitHandler(["uncaughtException", "SIGINT", "SIGTERM"], exit);
 
 void main();
 

@@ -1,4 +1,4 @@
-import {Document, Model, Mongoose, Types} from "mongoose";
+import {Document, Model, Types} from "mongoose";
 
 export interface User {
   id: string;
@@ -6,4 +6,4 @@ export interface User {
   age: number;
 }
 export type UserModel = Model<User>;
-export type MongoUser = Document<unknown, {}, User> & User & { _id: Types.ObjectId } & { __v: number };
+export type MongoUser = Document<unknown, object, User> & User & { _id: Types.ObjectId } & { __v: number };

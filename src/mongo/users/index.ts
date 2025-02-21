@@ -1,19 +1,11 @@
-import {MongoUser, User, UserModel} from "./types.js";
+import {User} from "./types.js";
+import getModel, {mapUserData} from "./utils.js";
 import connection from "../connection.js";
-
-let instance: UserModel | null = null;
 
 
 async function create(user: User): Promise<User> {
-  while (true) {
-    try {
-      const model = await getModel();
-      return mapUserData(await model.create(user));
-    } catch (e) {
-      console.log("Corrupted connection; trying again");
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    }
-  }
+  const model = await getModel();
+  return mapUserData(await model.create(user));
 }
 
 async function getById(id: string): Promise<User | null> {
@@ -34,36 +26,10 @@ async function clear(): Promise<void> {
 }
 
 
-async function getModel(): Promise<UserModel> {
-  if (!connection.isConnected() || !instance) {
-    const client = await connection.connect();
-    const schema = new client.Schema<User>({
-      id: {
-        type: String,
-        unique: true,
-      },
-      name: String,
-      age: Number,
-    });
-    instance = client.model<User>("User", schema);
-  }
-  if (!instance) throw new Error("Model couldn't be initialized");
-  return instance;
-}
-
-function mapUserData(data: MongoUser): User {
-  return {
-    id: data.id,
-    name: data.name,
-    age: data.age,
-  }
-}
-
-
 export * from "./types.js";
 export default {
   create,
   getById,
   get,
   clear,
-}
+};
