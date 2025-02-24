@@ -8,10 +8,7 @@ function exitHandler(signals: ExitSignal[], callback: ExitCallback): void {
     console.log(`Received signal: ${signal}`);
     try {
       const result = callback();
-
-      if (result instanceof Promise) {
-        await result;
-      }
+      if (result instanceof Promise) await result;
     } catch (e) {
       console.log(e);
     }

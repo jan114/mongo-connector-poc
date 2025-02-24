@@ -14,18 +14,9 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testMatch": [
-      "**/tests/**/*.test.ts"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json",
-      "node"
-    ]
+    "testMatch": [ "**/tests/**/*.test.ts" ],
+    "transform": { "^.+\\.ts$": "ts-jest" },
+    "moduleFileExtensions": [ "ts", "js", "json", "node" ]
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",

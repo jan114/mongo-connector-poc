@@ -16,5 +16,6 @@ export interface RetryOptions {
   forErrors?: ErrorPredicate[];
 }
 
-
 export type MongoEntity<T> = Document<unknown, object, T> & T & { _id: Types.ObjectId } & { __v: number };
+
+export class ConnectionOptionsMissingError extends Error {}

@@ -25,5 +25,5 @@ export function mapUserData(data: MongoConfirm): Confirm {
     id: data.id,
     name: data.name,
     age: data.age,
-  }
+  };
 }

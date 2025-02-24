@@ -1,9 +1,13 @@
 import {Mongoose} from "mongoose";
-import {ConnectOptions, ErrorPredicate} from "./types";
+import {
+  ConnectOptions,
+  ConnectionOptionsMissingError,
+  ErrorPredicate
+} from "./types";
 import {retry} from "./utils";
 
 const connectedStates = [1, 2];
-let connectionOptions: ConnectOptions;
+let connectionOptions: ConnectOptions | null = null;
 let client: Mongoose | null = null;
 
 
@@ -12,18 +16,22 @@ function init(options: ConnectOptions): void {
   console.log("Initialized...");
 }
 
+function reset(): void {
+  connectionOptions = null;
+}
+
 function isConnected(): boolean {
   return !!client && connectedStates.includes(client?.connection.readyState);
 }
 
 const retryErrors: ErrorPredicate[] = [(e) => e instanceof Error && e.message.includes("ECONNREFUSED")];
 async function retryConnect(): Promise<Mongoose | null> {
-  if (!connectionOptions)
-    throw new Error(
-      "Connection Options have to be specified first; use 'init' function."
-    );
   const mongoClient = new Mongoose();
   return await retry(async (): Promise<Mongoose | null> => {
+    if (!connectionOptions)
+      throw new ConnectionOptionsMissingError(
+        "Connection Options have to be specified first; use 'init' function."
+      );
     if (isConnected()) return null;
     await mongoClient.connect(connectionOptions.uri, {
       timeoutMS: connectionOptions.timeoutMS,
@@ -51,5 +59,6 @@ export default {
   init,
   isConnected,
   connect,
+  reset,
   close,
 };
