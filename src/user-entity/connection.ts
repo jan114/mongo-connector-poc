@@ -1,6 +1,6 @@
 import {Mongoose} from "mongoose";
-import {ConnectOptions, ErrorPredicate} from "./types.js";
-import {retry} from "./utils.js";
+import {ConnectOptions, ErrorPredicate} from "./types";
+import {retry} from "./utils";
 
 const connectedStates = [1, 2];
 let connectionOptions: ConnectOptions;

@@ -1,8 +1,8 @@
-import mongo from "./mongo/index.js";
+import mongo from "./user-entity/index";
+import {User} from "./user-entity/users/types";
 import process from "node:process";
 import crypto from "node:crypto";
-import {User} from "./mongo/users/index.js";
-import exitHandler from "./exit-handler.js";
+import exitHandler from "./exit-handler";
 
 async function main(): Promise<void> {
   mongo.connection.init({
@@ -23,7 +23,6 @@ async function main(): Promise<void> {
     usersArray.map(async (user) => {
       const result = await mongo.users.create(user);
       console.log("Created user:", result);
-      await mongo.connection.close();
       const result2 = await mongo.users.getById(user.id);
       console.log("Found user:", result2);
     })

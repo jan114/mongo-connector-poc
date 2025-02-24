@@ -1,4 +1,4 @@
-import {RetryOptions} from "./types.js";
+import {RetryOptions} from "./types";
 
 export async function retry<T>(
   fn: () => Promise<T>,

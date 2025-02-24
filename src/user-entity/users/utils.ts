@@ -1,5 +1,5 @@
-import {MongoUser, User, UserModel} from "./types.js";
-import connection from "../connection.js";
+import {MongoUser, User, UserModel} from "./types";
+import connection from "../connection";
 
 let instance: UserModel | null = null;
 
