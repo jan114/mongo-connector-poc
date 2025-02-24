@@ -1,5 +1,13 @@
 import {RetryOptions} from "./types";
 
+/**
+ * Retries the function until it succeeds or the attempts are exhausted.
+ *
+ * @param fn - function to retry
+ * @param attempts - number of attempts
+ * @param delay - delay between attempts
+ * @param forErrors - array of error predicates to retry for
+ */
 export async function retry<T>(
   fn: () => Promise<T>,
   {

@@ -1,26 +1,26 @@
-import {Confirm} from "./types";
+import {Confirm, ConfirmModel, MongoConfirm} from "./types";
 import getModel, {mapUserData} from "./utils";
 
 
 async function create(confirm: Confirm): Promise<Confirm> {
-  const model = await getModel();
+  const model: ConfirmModel = await getModel();
   return mapUserData(await model.create(confirm));
 }
 
 async function getById(id: string): Promise<Confirm | null> {
-  const model = await getModel();
-  const confirm = await model.findOne({id: id});
+  const model: ConfirmModel = await getModel();
+  const confirm: MongoConfirm | null = await model.findOne({id: id});
   return confirm && mapUserData(confirm);
 }
 
 async function get(): Promise<Confirm[]> {
-  const model = await getModel();
-  const confirms = await model.find();
+  const model: ConfirmModel = await getModel();
+  const confirms: MongoConfirm[] = await model.find();
   return confirms.map(mapUserData);
 }
 
 async function clear(): Promise<void> {
-  const model = await getModel();
+  const model: ConfirmModel = await getModel();
   await model.deleteMany({});
 }
 

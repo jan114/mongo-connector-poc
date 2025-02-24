@@ -6,5 +6,9 @@ export interface User {
   name: string;
   age: number;
 }
+export interface UserUpdate {
+  name?: string;
+  age?: number;
+}
 export type UserModel = Model<User>;
 export type MongoUser = MongoEntity<User>;

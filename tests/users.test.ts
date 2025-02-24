@@ -34,7 +34,7 @@ describe("connects to the mongodb and...", () => {
 
   it("creates multiple users and gets them", async () => {
     const users: User[] = [user, userFactory("Test User 2", 30)];
-    for (let user of users) await userEntity.users.create(user);
+    for (const user of users) await userEntity.users.create(user);
 
     const resultGetAll: User[] = await userEntity.users.get();
 
@@ -48,6 +48,14 @@ describe("connects to the mongodb and...", () => {
       const resultGet: User | null = await userEntity.users.getById(user.id);
 
       expect(resultGet).toStrictEqual(user);
+    });
+    it("updates user", async () => {
+      const updatedUser: User = {...user, name: "Updated User"};
+      const resultUpdate: boolean = await userEntity.users.update(updatedUser.id, {name: updatedUser.name});
+      const resultGet: User | null = await userEntity.users.getById(updatedUser.id);
+
+      expect(resultUpdate).toBe(true);
+      expect(resultGet).toStrictEqual(updatedUser);
     });
     it("closes connection and gets user", async () => {
       await userEntity.connection.close();
