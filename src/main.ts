@@ -1,8 +1,10 @@
 import mongo from "./user-entity/index";
 import {User} from "./user-entity/users/types";
 import process from "node:process";
-import crypto from "node:crypto";
 import exitHandler from "./exit-handler";
+import {v4} from "uuid";
+
+import {CountryCode, Language, Platform} from "./handlers/types";
 
 async function main(): Promise<void> {
   mongo.connection.init({
@@ -13,10 +15,74 @@ async function main(): Promise<void> {
   });
 
   const usersArray: User[] = [
-    { id: crypto.randomUUID(), name: "John Doe", age: 30 },
-    { id: crypto.randomUUID(), name: "Jane Doe", age: 25 },
-    { id: crypto.randomUUID(), name: "Alice", age: 22 },
-    { id: crypto.randomUUID(), name: "Bob", age: 27 },
+    {
+      id: v4(),
+      version: Date.now(),
+      email: "test@test.local",
+      password: "aaa",
+      passwordType: "BCRYPT",
+      profile: {
+        id: v4(),
+        version: Date.now(),
+        platformUserId: "123",
+        platformId: Platform.HEU,
+        countryCode: CountryCode.CZ,
+        newsletterSubscription: true,
+        language: Language.CS,
+      },
+      state: "active",
+    },
+    {
+      id: v4(),
+      version: Date.now(),
+      email: "test@test.local",
+      password: "aaa",
+      passwordType: "BCRYPT",
+      profile: {
+        id: v4(),
+        version: Date.now(),
+        platformUserId: "123",
+        platformId: Platform.HEU,
+        countryCode: CountryCode.CZ,
+        newsletterSubscription: true,
+        language: Language.CS,
+      },
+      state: "active",
+    },
+    {
+      id: v4(),
+      version: Date.now(),
+      email: "test@test.local",
+      password: "aaa",
+      passwordType: "BCRYPT",
+      profile: {
+        id: v4(),
+        version: Date.now(),
+        platformUserId: "123",
+        platformId: Platform.HEU,
+        countryCode: CountryCode.CZ,
+        newsletterSubscription: true,
+        language: Language.CS,
+      },
+      state: "active",
+    },
+    {
+      id: v4(),
+      version: Date.now(),
+      email: "test@test.local",
+      password: "aaa",
+      passwordType: "BCRYPT",
+      profile: {
+        id: v4(),
+        version: Date.now(),
+        platformUserId: "123",
+        platformId: Platform.HEU,
+        countryCode: CountryCode.CZ,
+        newsletterSubscription: true,
+        language: Language.CS,
+      },
+      state: "active",
+    },
   ];
 
   await Promise.all(

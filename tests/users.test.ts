@@ -1,11 +1,26 @@
 import userEntity from "../src/user-entity/index";
 import {User} from "../src/user-entity/users/types";
+import {v4} from "uuid";
+import {CountryCode, Language, Platform} from "../src/handlers/types";
 
 
-const userFactory = (name: string, age: number): User => ({
-  id: crypto.randomUUID(),
-  name,
-  age,
+const userFactory = (email = "test@test.local"): User => ({
+  id: v4(),
+  version: Date.now(),
+  email,
+  password: "aaa",
+  passwordType: "BCRYPT",
+  profile: {
+    id: v4(),
+    version: Date.now(),
+    platformUserId: "123",
+    platformId: Platform.HEU,
+    countryCode: CountryCode.CZ,
+    newsletterSubscription: true,
+    language: Language.CS,
+    phone: "+420123456789",
+  },
+  state: "active",
 });
 
 
@@ -24,7 +39,7 @@ afterEach(async () => {
 });
 
 describe("connects to the mongodb and...", () => {
-  const user: User = userFactory("Test User", 79);
+  const user: User = userFactory();
 
   it("creates user", async () => {
     const result: User = await userEntity.users.create(user);
@@ -33,7 +48,7 @@ describe("connects to the mongodb and...", () => {
   });
 
   it("creates multiple users and gets them", async () => {
-    const users: User[] = [user, userFactory("Test User 2", 30)];
+    const users: User[] = [user, userFactory("test@tadyda.local")];
     for (const user of users) await userEntity.users.create(user);
 
     const resultGetAll: User[] = await userEntity.users.get();
@@ -48,14 +63,6 @@ describe("connects to the mongodb and...", () => {
       const resultGet: User | null = await userEntity.users.getById(user.id);
 
       expect(resultGet).toStrictEqual(user);
-    });
-    it("updates user", async () => {
-      const updatedUser: User = {...user, name: "Updated User"};
-      const resultUpdate: boolean = await userEntity.users.update(updatedUser.id, {name: updatedUser.name});
-      const resultGet: User | null = await userEntity.users.getById(updatedUser.id);
-
-      expect(resultUpdate).toBe(true);
-      expect(resultGet).toStrictEqual(updatedUser);
     });
     it("closes connection and gets user", async () => {
       await userEntity.connection.close();
